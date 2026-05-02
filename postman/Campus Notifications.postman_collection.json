@@ -1,0 +1,161 @@
+{
+  "info": {
+    "_postman_id": "55f03d65-8c5c-4a6f-9b15-70cabd5f3bea",
+    "name": "Campus Notifications Microservice",
+    "description": "Register, authenticate, log, and fetch notifications for the campus notifications evaluation service.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\",\n  \"name\": \"{{name}}\",\n  \"mobileNo\": \"{{mobileNo}}\",\n  \"githubUsername\": \"{{githubUsername}}\",\n  \"rollNo\": \"{{rollNo}}\",\n  \"accessCode\": \"{{accessCode}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "register"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "const data = json.data || json;",
+              "const clientID = data.clientID || data.clientId || json.clientID || json.clientId;",
+              "const clientSecret = data.clientSecret || json.clientSecret;",
+              "if (clientID) pm.environment.set('clientID', clientID);",
+              "if (clientSecret) pm.environment.set('clientSecret', clientSecret);",
+              "pm.test('register responded successfully', function () {",
+              "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\",\n  \"name\": \"{{name}}\",\n  \"rollNo\": \"{{rollNo}}\",\n  \"accessCode\": \"{{accessCode}}\",\n  \"clientID\": \"{{clientID}}\",\n  \"clientSecret\": \"{{clientSecret}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "const data = json.data || json;",
+              "const token = data.access_token || data.accessToken || data.token || json.access_token || json.accessToken || json.token;",
+              "if (token) pm.environment.set('access_token', token);",
+              "pm.test('auth returned a bearer token', function () {",
+              "  pm.expect(token).to.be.a('string').and.not.empty;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/notifications?limit=10&page=1&notification_type=Placement",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "notifications"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "10"
+            },
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "notification_type",
+              "value": "Placement"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Logs",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stack\": \"backend\",\n  \"level\": \"info\",\n  \"package\": \"utils\",\n  \"message\": \"Postman log smoke test\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/logs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "logs"
+          ]
+        }
+      }
+    }
+  ]
+}
