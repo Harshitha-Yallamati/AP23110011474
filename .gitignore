@@ -1,0 +1,25 @@
+node_modules/
+
+# Runtime configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and runtime output
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Coverage and build artifacts
+coverage/
+dist/
+build/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
