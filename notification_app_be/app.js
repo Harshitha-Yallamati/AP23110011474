@@ -11,6 +11,43 @@ const PRIORITY_WEIGHTS = {
   Event: 1,
 };
 
+function getFallbackNotifications() {
+  const currentTimestamp = new Date().toISOString();
+
+  return [
+    {
+      Id: "fallback-1",
+      Type: "Placement",
+      Message: "New placement opportunity available for eligible students.",
+      Timestamp: currentTimestamp,
+    },
+    {
+      Id: "fallback-2",
+      Type: "Result",
+      Message: "Semester result update is available for review.",
+      Timestamp: currentTimestamp,
+    },
+    {
+      Id: "fallback-3",
+      Type: "Event",
+      Message: "Technical workshop registration is now open.",
+      Timestamp: currentTimestamp,
+    },
+    {
+      Id: "fallback-4",
+      Type: "Placement",
+      Message: "Interview schedule has been released by the placement cell.",
+      Timestamp: currentTimestamp,
+    },
+    {
+      Id: "fallback-5",
+      Type: "Event",
+      Message: "Campus seminar starts today in the main auditorium.",
+      Timestamp: currentTimestamp,
+    },
+  ];
+}
+
 function getPriorityWeight(type) {
   return PRIORITY_WEIGHTS[type] || 0;
 }
@@ -36,13 +73,37 @@ async function fetchNotifications() {
     "Fetching notifications from evaluation service"
   );
 
-  const response = await axios.get(NOTIFICATIONS_URL, {
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  });
+  try {
+    const response = await axios.get(NOTIFICATIONS_URL, {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+      timeout: 5000,
+    });
 
-  return response.data;
+    await Log(
+      "backend",
+      "info",
+      "service",
+      "Notifications fetched successfully from evaluation service"
+    );
+
+    return response.data;
+  } catch (error) {
+    const errorMessage = error.response?.data
+      ? JSON.stringify(error.response.data)
+      : error.message;
+
+    await Log(
+      "backend",
+      "error",
+      "service",
+      `Notification API failed. Using fallback data. Error: ${errorMessage}`
+    );
+
+    console.log("Using fallback data due to API failure");
+    return getFallbackNotifications();
+  }
 }
 
 async function main() {
@@ -78,6 +139,7 @@ async function main() {
 main();
 
 module.exports = {
+  getFallbackNotifications,
   getPriorityWeight,
   sortNotifications,
   fetchNotifications,
