@@ -30,6 +30,42 @@ const fallbackNotifications = [
     Message: "Interview schedule has been released by the placement cell.",
     Timestamp: new Date().toISOString(),
   },
+  {
+    Id: "fallback-5",
+    Type: "Result",
+    Message: "Revaluation application status has been updated.",
+    Timestamp: new Date().toISOString(),
+  },
+  {
+    Id: "fallback-6",
+    Type: "Event",
+    Message: "Coding club hackathon registrations close tonight.",
+    Timestamp: new Date().toISOString(),
+  },
+  {
+    Id: "fallback-7",
+    Type: "Placement",
+    Message: "Pre-placement talk for shortlisted candidates starts at 3 PM.",
+    Timestamp: new Date().toISOString(),
+  },
+  {
+    Id: "fallback-8",
+    Type: "Result",
+    Message: "Internal assessment marks are available on the portal.",
+    Timestamp: new Date().toISOString(),
+  },
+  {
+    Id: "fallback-9",
+    Type: "Event",
+    Message: "Alumni interaction session is scheduled for this weekend.",
+    Timestamp: new Date().toISOString(),
+  },
+  {
+    Id: "fallback-10",
+    Type: "Placement",
+    Message: "Resume submission deadline for campus hiring is tomorrow.",
+    Timestamp: new Date().toISOString(),
+  },
 ];
 
 function Home() {
